@@ -2,13 +2,7 @@ import sys
 import math
 import numpy
 
-# Auto-generated code below aims at helping you parse
-# the standard input according to the problem statement.
-
 have_boost = True
-
-
-# game loop
 
 
 def rotate(v, a):
@@ -101,6 +95,7 @@ for i in range(checkpoint_count):
     checkpoint = Point([int(i) for i in raw_input().split()])
     checkpoints.append(checkpoint)
 
+# game loop
 while True:
     p = get_state()
 
@@ -120,7 +115,7 @@ while True:
             checkpoint_distance = min(checkpoint_distance, length(projected_position) - 600)
 
         aim_second = checkpoints[(pod.cid + 1) % checkpoint_count]
-        alpha = 0.7 + checkpoint_distance / 600.0
+        alpha = 0.75 + checkpoint_distance / 600.0
         print >> sys.stderr, alpha, checkpoint_distance
         alpha = max(0, min(1, alpha))
 
