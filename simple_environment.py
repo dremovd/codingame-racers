@@ -137,7 +137,8 @@ class Checkpoint:
 
 class Environment:
     """Simple environment for one pod without collisions, shields and boost"""
-    def reset(self):
+    def reset(self, seed = None):
+        random.seed(seed)
         self.checkpoints = [
             Checkpoint()
             for i in range(random.randint(3, 8))
