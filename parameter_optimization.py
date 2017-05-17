@@ -18,11 +18,21 @@ class SimpleControl:
         self.beta = beta
 
     def control(self, obs):
-        next_checkpoint_angle = obs['checkpoint'][1]
+        checkpoint_angle = obs['checkpoint'][1]
+        distance_to_checkpoint = obs['checkpoint'][0]
+        next_checkpoint_angle = obs['next_checkpoint'][1]
         current_angle = obs['pod'][1]
+        goto_next_checkpoint = distance_to_checkpoint < self.beta
+        if goto_next_checkpoint:
+            rotation = next_checkpoint_angle - current_angle
+        else:
+            rotation = checkpoint_angle - current_angle
+
         control = {
-            'thrust': self.alpha * 100,
-            'rotation': (next_checkpoint_angle - current_angle) * self.beta,
+            'thrust': 100,
+            'rotation': (
+                rotation
+            ),
         }
         return control
 
@@ -54,9 +64,9 @@ def estimate_reward(episodes_count, model):
 
 if __name__ == '__main__':
     with open('optimization.log', 'w') as out_file:
-        for beta in np.linspace(0.05, 1, 20)[::-1]:
-            for alpha in np.linspace(0.05, 1, 20)[::-1]:
-                steps = estimate_reward(100, model = SimpleControl(alpha, beta))
+        for beta in np.linspace(600, 2500, 20): #[::-1]:
+            for alpha in [1.0]: # np.linspace(0.05, 1, 20)[::-1]:
+                steps = estimate_reward(20, model = SimpleControl(alpha, beta))
                 print >>out_file, alpha, beta, steps
                 print alpha, beta, steps
 
